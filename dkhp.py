@@ -22,14 +22,20 @@ while True:
 			#get content to sp login in next command
 			page_soup=soup(r.content,'html.parser')
 			#find a form
-			login_data['form_build_id']=page_soup.find('input',attrs={'name':'name'})['value']
+			try:
+				login_data['form_build_id']=page_soup.find('input',attrs={'name':'name'})['value']
 			#login
+			except:
+				pass
 			r=s.post(url,data=login_data,headers=headers)
 			page_soup=soup(r.content,'html.parser')
 			
 			#data['form_build_id']='form-I0P8xCIJqhMWvdq5HGuIu2T6Vs9wpXhejR--ycWe2Ug'#page_soup.find('textarea',attrs={'name':'dsmalop'})['value']
 			#find a token for login
-			data['form_token'] =page_soup.find('input',attrs={'name':"form_token"})['value']
+			try:
+				data['form_token'] =page_soup.find('input',attrs={'name':"form_token"})['value']
+			except:
+				pass
 			url='https://dkhp.uit.edu.vn/sinhvien/hocphan/dangky'
 			#send the subject data
 			r=s.post(url,data=data,headers=headers)
@@ -47,9 +53,12 @@ while True:
 				print(success.get_text())
 			except:
 				pass
-			da_dk=page_soup.find('div',{'class':'table_lophoc_dadk_wrapper'}).findAll('div',{'class':re.compile("^(form-item form-type-checkbox form-item-table-lophoc-dadk-)")})
-			for i in da_dk:
-				print(i.attrs['class'][2].split('-')[-1])	
+			try:
+				da_dk=page_soup.find('div',{'class':'table_lophoc_dadk_wrapper'}).findAll('div',{'class':re.compile("^(form-item form-type-checkbox form-item-table-lophoc-dadk-)")})
+				for i in da_dk:
+					print(i.attrs['class'][2].split('-')[-1])	
+			except:
+				pass
 			break
 	except requests.exceptions.RequestException as err:
 	    print ("OOps: Something Else",err)
